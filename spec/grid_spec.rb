@@ -233,4 +233,44 @@ describe ConnectFour do
       end
     end
   end
+
+  describe '#won?' do
+    subject(:game_won) { described_class.new }
+
+    context 'when the game is won' do
+      before do
+        mock_grid = [
+          [nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, 'red', nil, nil],
+          [nil, nil, nil, 'red', nil, nil, nil],
+          [nil, nil, 'red', nil, nil, nil, nil],
+          [nil, 'red', nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil]
+        ]
+        allow(game_won).to receive(:grid).and_return(mock_grid)
+      end
+
+      it 'returns true when winning condition is met' do
+        expect(game_won.won?('red', 2, 3)).to be true
+      end
+    end
+
+    context 'when the game is not won' do
+      before do
+        mock_grid = [
+          [nil, nil, nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, 'red', nil, nil],
+          [nil, nil, nil, 'red', nil, nil, nil],
+          [nil, nil, 'black', nil, nil, nil, nil],
+          [nil, 'red', nil, nil, nil, nil, nil],
+          [nil, nil, nil, nil, nil, nil, nil]
+        ]
+        allow(game_won).to receive(:grid).and_return(mock_grid)
+      end
+
+      it 'returns false when winning condition is not met' do
+        expect(game_won.won?('red', 2, 3)).to be false
+      end
+    end
+  end
 end

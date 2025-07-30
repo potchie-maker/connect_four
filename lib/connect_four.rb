@@ -1,8 +1,9 @@
 class ConnectFour
   attr_reader :grid
   
-  def initialize(rows = 6, columns = 7)
+  def initialize(rows = 6, columns = 7, win_condition = 4)
     @grid = Array.new(rows) { Array.new(columns) }
+    @win_condition = win_condition
   end
 
   def get_column
@@ -23,11 +24,15 @@ class ConnectFour
     nil
   end
 
-  def find_win(color, row, column)
-    
+  def won?(color, row, column)
+    horizontal_check(color, row, column) >= @win_condition ||
+    vertical_check(color, row, column) >= @win_condition ||
+    diagonal_check(color, row, column) >= @win_condition
   end
 
   def horizontal_check(color, row, column)
+    return 0 unless grid[row][column] == color
+
     original_piece_count = 1
 
     # COLUMN LEFT CHECK
@@ -54,6 +59,8 @@ class ConnectFour
   end
 
   def vertical_check(color, row, column)
+    return 0 unless grid[row][column] == color
+
     original_piece_count = 1
 
     # ROW UP CHECK
@@ -80,6 +87,8 @@ class ConnectFour
   end
 
   def diagonal_check(color, row, column)
+    return 0 unless grid[row][column] == color
+
     original_piece_count = 1
 
     # UP AND RIGHT CHECK
@@ -130,6 +139,6 @@ class ConnectFour
       curr_col_down_right += 1
     end
 
-    original_piece_count + up_right_count + down_left_count + up_left_count + down_right_count
+    [original_piece_count + up_right_count + down_left_count, original_piece_count + up_left_count + down_right_count].max
   end
 end
