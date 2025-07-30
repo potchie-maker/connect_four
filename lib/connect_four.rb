@@ -30,7 +30,7 @@ class ConnectFour
   def horizontal_check(color, row, column)
     original_piece_count = 1
 
-    # LEFT CHECK
+    # COLUMN LEFT CHECK
 
     left_count = 0
     curr_col_left = column - 1
@@ -40,7 +40,7 @@ class ConnectFour
       curr_col_left -= 1
     end
 
-    # RIGHT CHECK
+    # COLUMN RIGHT CHECK
 
     right_count = 0
     curr_col_right = column + 1
@@ -56,7 +56,7 @@ class ConnectFour
   def vertical_check(color, row, column)
     original_piece_count = 1
 
-    # UP CHECK
+    # ROW UP CHECK
     
     up_count = 0
     curr_row_up = row - 1
@@ -66,7 +66,7 @@ class ConnectFour
       curr_row_up -= 1
     end
 
-    # DOWN CHECK
+    # ROW DOWN CHECK
     
     down_count = 0
     curr_row_down = row + 1
@@ -77,5 +77,59 @@ class ConnectFour
     end
 
     original_piece_count + up_count + down_count
+  end
+
+  def diagonal_check(color, row, column)
+    original_piece_count = 1
+
+    # UP AND RIGHT CHECK
+    
+    up_right_count = 0
+    curr_row_up_right = row - 1
+    curr_col_up_right = column + 1
+
+    while curr_row_up_right >= 0 && curr_col_up_right < grid[0].size && grid[curr_row_up_right][curr_col_up_right] == color
+      up_right_count += 1
+      curr_row_up_right -= 1
+      curr_col_up_right += 1
+    end
+
+    # DOWN AND LEFT CHECK
+    
+    down_left_count = 0
+    curr_row_down_left = row + 1
+    curr_col_down_left = column - 1
+
+    while curr_row_down_left < grid.size && curr_col_down_left >= 0 && grid[curr_row_down_left][curr_col_down_left] == color
+      down_left_count += 1
+      curr_row_down_left += 1
+      curr_col_down_left -= 1
+    end
+
+    # UP AND LEFT CHECK
+    
+    up_left_count = 0
+    curr_row_up_left = row - 1
+    curr_col_up_left = column - 1
+
+    while curr_row_up_left >= 0 && curr_col_up_left >= 0 && grid[curr_row_up_left][curr_col_up_left] == color
+      up_left_count += 1
+      curr_row_up_left -= 1
+      curr_col_up_left -= 1
+    end
+
+    # DOWN AND RIGHT CHECK
+    
+    down_right_count = 0
+    curr_row_down_right = row + 1
+    curr_col_down_right = column + 1
+
+    while curr_row_down_right < grid.size && curr_col_down_right < grid[0].size && grid[curr_row_down_right][curr_col_down_right] == color
+      down_right_count += 1
+      curr_row_down_right += 1
+      curr_col_down_right += 1
+    end
+
+    original_piece_count + up_right_count + down_left_count + up_left_count + down_right_count
   end
 end
