@@ -42,7 +42,7 @@ class ConnectFour
 
       if tie?
         print_grid
-        puts "\n\nThe game ended in a tie!"
+        puts "\n\nThe game ended in a tie!\n\n"
         break
       end
     end
