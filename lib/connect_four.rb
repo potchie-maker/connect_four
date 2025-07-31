@@ -71,6 +71,8 @@ class ConnectFour
     transformed_grid
   end
 
+# Followed models from ruby_testing repo lib/15a_binary_game.rb for get_column and verify_input methods
+
   def get_column(player)
     loop do
       puts "\n\n"

@@ -7,6 +7,7 @@ require_relative '../lib/connect_four'
 #           [nil, nil, nil, nil, nil, nil, nil],
 #           [nil, nil, nil, nil, nil, nil, nil]
 #         ]
+
 describe ConnectFour do
   describe '#drop' do
     context 'when piece gets dropped in empty grid' do
