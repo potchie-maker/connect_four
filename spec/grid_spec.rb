@@ -27,6 +27,13 @@ describe ConnectFour do
         game_drop.drop(chosen_column,piece_two)
         expect(game_drop.grid[-2][0]).to eq('black')
       end
+
+      it 'drops in middle range column' do
+        piece = 'red'
+        chosen_column = 4
+        game_drop.drop(chosen_column, piece)
+        expect(game_drop.grid[-1][4]).to eq('red')
+      end
     end
   end
 
@@ -276,7 +283,7 @@ describe ConnectFour do
 
   describe '#transform_grid' do
     subject(:game_transform) { described_class.new }
-    
+
     context 'while game is ongoing' do
       before do
         mock_grid = [
@@ -292,14 +299,54 @@ describe ConnectFour do
 
       it 'returns transformed grid' do
         transformed_grid = [
-            [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            ['🔴', ' ', '⬤', ' ', '⬤', ' ', ' '],
-            ['🔴', '🔴', '🔴', '⬤', '🔴', ' ', ' '],
-            ['⬤', '🔴', '⬤', '⬤', '⬤', '🔴', ' ']
+            ['⚪', '⚪', '⚪', '⚪', '⚪', '⚪', '⚪'],
+            ['⚪', '⚪', '⚪', '⚪', '⚪', '⚪', '⚪'],
+            ['⚪', '⚪', '⚪', '⚪', '⚪', '⚪', '⚪'],
+            ['🔴', '⚪', '⚫', '⚪', '⚫', '⚪', '⚪'],
+            ['🔴', '🔴', '🔴', '⚫', '🔴', '⚪', '⚪'],
+            ['⚫', '🔴', '⚫', '⚫', '⚫', '🔴', '⚪']
           ]
         expect(game_transform.transform_grid).to eq(transformed_grid)
+      end
+    end
+  end
+
+  describe '#tie?' do
+    subject(:game_tie) { described_class.new }
+
+    context 'when grid is full' do
+      before do
+        mock_grid = mock_grid = [
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1]
+          ]
+        allow(game_tie).to receive(:grid).and_return(mock_grid)
+      end
+      
+      it 'returns true for full grid' do
+        expect(game_tie.tie?).to be true
+      end
+    end
+
+    context 'when grid is not full' do
+      before do
+        mock_grid = mock_grid = [
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, nil, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1],
+              [1, 1, 1, 1, 1, 1, 1]
+            ]
+        allow(game_tie).to receive(:grid).and_return(mock_grid)
+      end
+
+      it 'returns false for grid that is not full' do
+        expect(game_tie.tie?).to be(false)
       end
     end
   end

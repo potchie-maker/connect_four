@@ -1,16 +1,56 @@
+require_relative 'player'
+
 class ConnectFour
   attr_reader :grid
   
   def initialize(rows = 6, columns = 7, win_condition = 4)
-    @grid = Array.new(rows) { Array.new(columns) }
+    @rows = rows
+    @columns = columns
+    @grid = Array.new(@rows) { Array.new(@columns) }
     @win_condition = win_condition
   end
 
   def play(player_one, player_two)
-    puts 'Welcome to Connect Four'
+    puts "Welcome to Connect Four!\n\n"
+
+    loop do
+      print_grid
+
+      # PLAYER 1 TURN
+      
+      puts "\n\nPlayer 1, choose from columns 1 though #{@columns}."
+      player_one_col_choice = get_column(player_one)
+      player_one_dropped_row = drop(player_one_col_choice, player_one.color)
+      print_grid
+
+      if won?(player_one.color, player_one_dropped_row, player_one_col_choice)
+        puts "\n\n#{player_one.name} Won!!!!!\n\n"
+        break
+      end
+
+      # PLAYER 2 TURN
+      
+      puts "\n\nPlayer 2, choose from columns 1 though #{@columns}."
+      player_two_col_choice = get_column(player_two)
+      player_two_dropped_row = drop(player_two_col_choice, player_two.color)
+
+      if won?(player_two.color, player_two_dropped_row, player_two_col_choice)
+        print_grid
+        puts "\n\n#{player_two.name} Won!!!!!\n\n"
+        break
+      end
+
+      if tie?
+        print_grid
+        puts "\n\nThe game ended in a tie!"
+        break
+      end
+    end
   end
 
   def print_grid
+    puts "\n\n"
+    puts "1    2    3    4    5    6    7\n\n"
     transformed_grid = transform_grid
     transformed_grid.each { |row| puts row.join(' | ') }
   end
@@ -21,9 +61,9 @@ class ConnectFour
         if piece == 'red'
           '🔴'
         elsif piece == 'black'
-          '⬤'
+          '⚫'
         else
-          ' '
+          '⚪'
         end
       end
     end
@@ -31,20 +71,34 @@ class ConnectFour
     transformed_grid
   end
 
-  def get_column
-    choice = gets.chomp
-    column = choice.to_i - 1
-    column
+  def get_column(player)
+    loop do
+      puts "\n\n"
+
+      choice = gets.chomp
+      valid_input = verify_input(1, @columns, choice.to_i) if choice.match?(/^\d+$/)
+      chosen_col = valid_input.to_i - 1
+      return chosen_col if valid_input && grid[0][chosen_col].nil?
+
+      puts "\n\nColumn does not exist, #{player.name} please enter number in range of 1 and #{@columns}.\n\n"
+      print_grid
+    end
+  end
+
+  def verify_input(first_col, last_col, input)
+    return input if input.between?(first_col, last_col)
   end
 
   def drop(column, piece)
     empty_row = find_empty(column)
-    empty_row[column] = piece
+    return nil unless empty_row
+    grid[empty_row][column] = piece
+    empty_row
   end
 
   def find_empty(column)
-    grid.reverse.each do |row|
-      return row if row[column] == nil
+    (@rows - 1).downto(0) do |row|
+      return row if grid[row][column].nil?
     end
     nil
   end
@@ -53,6 +107,10 @@ class ConnectFour
     horizontal_check(color, row, column) >= @win_condition ||
     vertical_check(color, row, column) >= @win_condition ||
     diagonal_check(color, row, column) >= @win_condition
+  end
+
+  def tie?
+    grid.flatten.any?(nil) ? false : true
   end
 
   def horizontal_check(color, row, column)
