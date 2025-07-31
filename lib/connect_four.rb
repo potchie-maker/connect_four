@@ -11,7 +11,7 @@ class ConnectFour
   end
 
   def play(player_one, player_two)
-    puts "Welcome to Connect Four!\n\n"
+    puts "\n\nWelcome to Connect Four!\n\n"
 
     loop do
       print_grid
@@ -50,9 +50,9 @@ class ConnectFour
 
   def print_grid
     puts "\n\n"
-    puts "1    2    3    4    5    6    7\n\n"
+    puts (1..@columns).to_a.join('  ')
     transformed_grid = transform_grid
-    transformed_grid.each { |row| puts row.join(' | ') }
+    transformed_grid.each { |row| puts row.join('|') }
   end
 
   def transform_grid
