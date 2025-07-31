@@ -273,4 +273,34 @@ describe ConnectFour do
       end
     end
   end
+
+  describe '#transform_grid' do
+    subject(:game_transform) { described_class.new }
+    
+    context 'while game is ongoing' do
+      before do
+        mock_grid = [
+            [nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil],
+            [nil, nil, nil, nil, nil, nil, nil],
+            ['red', nil, 'black', nil, 'black', nil, nil],
+            ['red', 'red', 'red', 'black', 'red', nil, nil],
+            ['black', 'red', 'black', 'black', 'black', 'red', nil]
+          ]
+        allow(game_transform).to receive(:grid).and_return(mock_grid)
+      end
+
+      it 'returns transformed grid' do
+        transformed_grid = [
+            [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['🔴', ' ', '⬤', ' ', '⬤', ' ', ' '],
+            ['🔴', '🔴', '🔴', '⬤', '🔴', ' ', ' '],
+            ['⬤', '🔴', '⬤', '⬤', '⬤', '🔴', ' ']
+          ]
+        expect(game_transform.transform_grid).to eq(transformed_grid)
+      end
+    end
+  end
 end

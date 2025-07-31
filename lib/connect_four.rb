@@ -6,6 +6,31 @@ class ConnectFour
     @win_condition = win_condition
   end
 
+  def play(player_one, player_two)
+    puts 'Welcome to Connect Four'
+  end
+
+  def print_grid
+    transformed_grid = transform_grid
+    transformed_grid.each { |row| puts row.join(' | ') }
+  end
+
+  def transform_grid
+    transformed_grid = grid.map do |row|
+      row.map do |piece|
+        if piece == 'red'
+          '🔴'
+        elsif piece == 'black'
+          '⬤'
+        else
+          ' '
+        end
+      end
+    end
+
+    transformed_grid
+  end
+
   def get_column
     choice = gets.chomp
     column = choice.to_i - 1
